@@ -1,6 +1,6 @@
 # RAGify Project
 
-This project is a full-stack application with the following structure:
+This project is a full-stack application with the following structure
 
 - **backend/**: Contains the FastAPI backend for handling API requests.
   - `main.py`: Entry point for the FastAPI application.
