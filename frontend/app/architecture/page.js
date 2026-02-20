@@ -54,7 +54,7 @@ export default function Architecture() {
                     JSON Response
                   </span>
                   <span className="block text-xs text-zinc-600 dark:text-zinc-400">
-                    {"{ filename, content: \"...\" }"}
+                    {"{ filename, content, chunks[] }"}
                   </span>
                 </div>
               </div>
@@ -69,6 +69,106 @@ export default function Architecture() {
                 :8000
               </span>
             </div>
+          </div>
+        </div>
+
+        {/* Chunking Pipeline */}
+        <div className="mt-10">
+          <h2 className="mb-6 text-lg font-semibold text-zinc-700 dark:text-zinc-300">
+            Text Chunking Pipeline
+          </h2>
+          
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {/* PDF Input */}
+            <div className="flex h-20 w-24 flex-col items-center justify-center rounded-lg border-2 border-red-400 bg-red-50 dark:bg-red-950">
+              <span className="text-2xl">📄</span>
+              <span className="text-xs font-medium text-red-700 dark:text-red-300">PDF</span>
+            </div>
+            
+            <span className="text-xl text-zinc-400">→</span>
+            
+            {/* pdfplumber */}
+            <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950">
+              <span className="text-xs font-bold text-yellow-700 dark:text-yellow-300">pdfplumber</span>
+              <span className="text-xs text-yellow-600 dark:text-yellow-400">Extract Text</span>
+            </div>
+            
+            <span className="text-xl text-zinc-400">→</span>
+            
+            {/* Raw Text */}
+            <div className="flex h-20 w-24 flex-col items-center justify-center rounded-lg border-2 border-zinc-400 bg-zinc-100 dark:bg-zinc-800">
+              <span className="text-2xl">📝</span>
+              <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Raw Text</span>
+            </div>
+            
+            <span className="text-xl text-zinc-400">→</span>
+            
+            {/* LangChain */}
+            <div className="flex h-20 w-32 flex-col items-center justify-center rounded-lg border-2 border-green-400 bg-green-50 dark:bg-green-950">
+              <span className="text-xs font-bold text-green-700 dark:text-green-300">LangChain</span>
+              <span className="text-xs text-green-600 dark:text-green-400">TextSplitter</span>
+            </div>
+            
+            <span className="text-xl text-zinc-400">→</span>
+            
+            {/* Chunks */}
+            <div className="flex h-20 w-24 flex-col items-center justify-center rounded-lg border-2 border-purple-400 bg-purple-50 dark:bg-purple-950">
+              <div className="flex gap-0.5">
+                <span className="text-sm">📦</span>
+                <span className="text-sm">📦</span>
+                <span className="text-sm">📦</span>
+              </div>
+              <span className="text-xs font-medium text-purple-700 dark:text-purple-300">Chunks</span>
+            </div>
+          </div>
+
+          {/* Chunking Details */}
+          <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950">
+            <h3 className="mb-3 font-semibold text-green-700 dark:text-green-300">
+              LangChain RecursiveCharacterTextSplitter
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">Settings</h4>
+                <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <li>• chunk_size: <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">500</code> chars</li>
+                  <li>• chunk_overlap: <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">100</code> chars</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">Separators (Priority)</h4>
+                <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <li>1. <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">\n\n</code> Paragraphs</li>
+                  <li>2. <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">\n</code> Lines</li>
+                  <li>3. <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">. ! ?</code> Sentences</li>
+                  <li>4. <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">space</code> Words</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Overlap Visualization */}
+          <div className="mt-4 rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-950">
+            <h3 className="mb-3 font-semibold text-purple-700 dark:text-purple-300">
+              Overlap Visualization
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-48 rounded bg-blue-400"></div>
+                <span className="text-xs text-zinc-600 dark:text-zinc-400">Chunk 1 (500 chars)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="ml-40 h-6 w-48 rounded bg-green-400"></div>
+                <span className="text-xs text-zinc-600 dark:text-zinc-400">Chunk 2 (overlaps 100 chars)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="ml-80 h-6 w-48 rounded bg-orange-400"></div>
+                <span className="text-xs text-zinc-600 dark:text-zinc-400">Chunk 3 (overlaps 100 chars)</span>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-zinc-600 dark:text-zinc-400">
+              Overlap ensures context is preserved across chunk boundaries for better retrieval.
+            </p>
           </div>
         </div>
 
@@ -90,11 +190,11 @@ export default function Architecture() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-500">●</span>
-                <span>Display extracted text content</span>
+                <span>Toggle: Full Content / Chunks view</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-500">●</span>
-                <span>Error handling & loading states</span>
+                <span>Display chunk cards with metadata</span>
               </li>
             </ul>
           </div>
@@ -107,19 +207,19 @@ export default function Architecture() {
             <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
               <li className="flex items-start gap-2">
                 <span className="text-orange-500">●</span>
-                <span>CORS enabled for localhost:3000</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500">●</span>
-                <span>POST /upload-pdf/ endpoint</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500">●</span>
                 <span>Save PDF to uploaded_pdfs/</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-orange-500">●</span>
                 <span>Extract text with pdfplumber</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-orange-500">●</span>
+                <span>Chunk text with LangChain</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-orange-500">●</span>
+                <span>Return chunks array in response</span>
               </li>
             </ul>
           </div>
@@ -133,12 +233,12 @@ export default function Architecture() {
           <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
             {[
               "1. Select PDF",
-              "2. Click Upload",
-              "3. FormData POST",
-              "4. Save File",
-              "5. Extract Text",
+              "2. Upload",
+              "3. Save File",
+              "4. Extract Text",
+              "5. Chunk Text",
               "6. Return JSON",
-              "7. Display Content",
+              "7. Display",
             ].map((step, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className="rounded-full bg-zinc-200 px-3 py-1 dark:bg-zinc-700 dark:text-zinc-300">

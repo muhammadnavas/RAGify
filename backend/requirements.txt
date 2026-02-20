@@ -1,2 +1,5 @@
 fastapi
 uvicorn
+pdfplumber
+langchain
+langchain-text-splitters
