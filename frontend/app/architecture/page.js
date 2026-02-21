@@ -195,67 +195,71 @@ export default function Architecture() {
           </div>
         </section>
 
-        {/* Section 3: Query & Retrieval Pipeline */}
-        <section className="mb-10">
+        {/* Section 3: Embeddings & LLM Retrieval */}
+        <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white">
-              Q
+              3
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
-              Query & Retrieval Pipeline
+              Embeddings, Vector DB & LLM Retrieval
             </h2>
           </div>
 
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-center gap-4">
-              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-sky-300 bg-sky-50 dark:bg-sky-950">
-                <span className="text-2xl">❓</span>
-                <span className="text-xs font-medium text-sky-700 dark:text-sky-300">User Query</span>
+          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {/* Chunks */}
+              <div className="flex h-20 w-24 flex-col items-center justify-center rounded-lg border-2 border-purple-400 bg-purple-50 dark:bg-purple-950">
+                <div className="flex gap-0.5">
+                  <span className="text-sm">📦</span>
+                  <span className="text-sm">📦</span>
+                  <span className="text-sm">📦</span>
+                </div>
+                <span className="text-xs font-medium text-purple-700 dark:text-purple-300">Chunks</span>
               </div>
 
-              <span className="text-2xl text-zinc-400">→</span>
+              <span className="text-xl text-zinc-400">→</span>
 
-              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-indigo-300 bg-indigo-50 dark:bg-indigo-950">
-                <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">Embed Model</span>
-                <span className="text-xs text-indigo-600 dark:text-indigo-400">(OpenAI / HF)</span>
+              {/* Embeddings */}
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-teal-400 bg-teal-50 dark:bg-teal-950">
+                <span className="text-xs font-bold text-teal-700 dark:text-teal-300">Embeddings</span>
+                <span className="text-xs text-teal-600 dark:text-teal-400">sentence-vectors</span>
               </div>
 
-              <span className="text-2xl text-zinc-400">→</span>
+              <span className="text-xl text-zinc-400">→</span>
 
-              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-emerald-300 bg-emerald-50 dark:bg-emerald-950">
-                <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300">Vector DB</span>
-                <span className="text-xs text-emerald-600 dark:text-emerald-400">(Chroma / FAISS)</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-4">
-              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-amber-300 bg-amber-50 dark:bg-amber-950">
-                <span className="text-xs font-bold text-amber-700 dark:text-amber-300">Similarity Search</span>
-                <span className="text-xs text-amber-600 dark:text-amber-400">Top-K retrieval</span>
+              {/* Vector DB */}
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-sky-400 bg-sky-50 dark:bg-sky-950">
+                <span className="text-xs font-bold text-sky-700 dark:text-sky-300">FAISS</span>
+                <span className="text-xs text-sky-600 dark:text-sky-400">Vector DB</span>
               </div>
 
-              <span className="text-2xl text-zinc-400">→</span>
+              <span className="text-xl text-zinc-400">→</span>
 
-              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-fuchsia-300 bg-fuchsia-50 dark:bg-fuchsia-950">
-                <span className="text-xs font-bold text-fuchsia-700 dark:text-fuchsia-300">Context Builder</span>
-                <span className="text-xs text-fuchsia-600 dark:text-fuchsia-400">Assemble top chunks</span>
-              </div>
-
-              <span className="text-2xl text-zinc-400">→</span>
-
-              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-rose-300 bg-rose-50 dark:bg-rose-950">
-                <span className="text-xs font-bold text-rose-700 dark:text-rose-300">LLM</span>
-                <span className="text-xs text-rose-600 dark:text-rose-400">(Generate answer)</span>
+              {/* Query/LLM */}
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-indigo-400 bg-indigo-50 dark:bg-indigo-950">
+                <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">LLM</span>
+                <span className="text-xs text-indigo-600 dark:text-indigo-400">ChatCompletion</span>
               </div>
             </div>
 
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-              <strong className="block mb-2">Notes</strong>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Embed the user query using the same embedding model used for chunks.</li>
-                <li>Perform vector similarity search (cosine / dot) to retrieve top-K relevant chunks.</li>
-                <li>Concatenate retrieved chunks into prompt context (respect token limits) and send to LLM.</li>
-              </ul>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div>
+                <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">Endpoints</h4>
+                <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <li>• <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">POST /store-embeddings/</code> — chunk + store embeddings to FAISS</li>
+                  <li>• <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">POST /search/</code> — semantic search (returns top-k chunks)</li>
+                  <li>• <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">POST /answer/</code> — runs search + ChatCompletion to generate answer</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">Notes</h4>
+                <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <li>• Embeddings computed using a sentence-transformer or OpenAI embeddings.</li>
+                  <li>• FAISS provides efficient nearest-neighbor search for top-k retrieval.</li>
+                  <li>• The server builds a prompt with top-k chunks and asks the LLM to answer using only that context.</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>

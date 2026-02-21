@@ -3,6 +3,8 @@ uvicorn
 pdfplumber
 langchain
 langchain-text-splitters
+openai
+numpy
 langchain-huggingface
 langchain-community
 numpy<2.0

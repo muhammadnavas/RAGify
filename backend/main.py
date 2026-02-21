@@ -10,6 +10,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from pydantic import BaseModel
+import openai
+import numpy as np
 
 app = FastAPI()
 
@@ -63,6 +65,11 @@ def load_vectorstore():
 
 # Try loading existing index on startup
 load_vectorstore()
+
+# Initialize OpenAI if key provided
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if OPENAI_API_KEY:
+    openai.api_key = OPENAI_API_KEY
 
 # Request models
 class SearchRequest(BaseModel):
@@ -218,3 +225,54 @@ async def get_index_stats():
         "embedding_model": EMBEDDING_MODEL,
         "embedding_dimensions": 384  # all-MiniLM-L6-v2 dimension
     }, status_code=200)
+
+
+@app.post("/answer/")
+async def answer(request: SearchRequest):
+    """Retrieve top-k chunks from FAISS and generate an answer using OpenAI ChatCompletion."""
+    global vectorstore
+
+    if vectorstore is None:
+        raise HTTPException(
+            status_code=400,
+            detail="No documents indexed yet. Upload a PDF and store embeddings using /store-embeddings/"
+        )
+
+    if not OPENAI_API_KEY:
+        raise HTTPException(status_code=400, detail="OPENAI_API_KEY not set on server")
+
+    try:
+        results = vectorstore.similarity_search_with_score(request.query, k=request.top_k)
+
+        # Build context and matches
+        context_parts = []
+        matches = []
+        for doc, score in results:
+            text = doc.page_content
+            source = doc.metadata.get("source", "unknown")
+            context_parts.append(f"[Source: {source}] {text}")
+            matches.append({"text": text, "source": source, "score": float(1 - score)})
+
+        system_prompt = (
+            "You are a helpful assistant. Use only the provided context to answer the question. "
+            "If the information is not present, say you don't know. Cite sources by filename where relevant."
+        )
+
+        user_prompt = f"Context:\n\n{chr(10).join(context_parts)}\n\nQuestion: {request.query}\n\nAnswer concisely and cite sources."
+
+        chat_resp = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=512,
+            temperature=0.0,
+        )
+
+        answer_text = chat_resp["choices"][0]["message"]["content"].strip()
+
+        return JSONResponse(content={"answer": answer_text, "matches": matches}, status_code=200)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
