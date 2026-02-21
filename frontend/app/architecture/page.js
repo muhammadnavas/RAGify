@@ -4,15 +4,28 @@ export default function Architecture() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 p-8 font-sans dark:bg-black">
       <div className="w-full max-w-4xl rounded-lg bg-white p-8 shadow-lg dark:bg-zinc-900">
-        <h1 className="mb-8 text-center text-2xl font-bold text-zinc-900 dark:text-white">
-          RAGify - Architecture Flow
-        </h1>
+        {/* Main Title */}
+        <div className="mb-10 text-center">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
+            RAGify
+          </h1>
+          <p className="mt-2 text-lg text-zinc-500 dark:text-zinc-400">
+            Architecture & System Design
+          </p>
+          <div className="mx-auto mt-4 h-1 w-24 rounded bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500"></div>
+        </div>
 
-        {/* Request/Response Flow Diagram */}
-        <div className="relative mx-auto max-w-3xl">
-          <h2 className="mb-6 text-lg font-semibold text-zinc-700 dark:text-zinc-300">
-            Request/Response Flow
-          </h2>
+        {/* Section 1: Request/Response Flow */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
+              1
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Request / Response Flow
+            </h2>
+          </div>
+          <div className="relative mx-auto max-w-3xl rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
 
           <div className="flex items-center justify-between gap-4">
             {/* Frontend Box */}
@@ -70,13 +83,20 @@ export default function Architecture() {
               </span>
             </div>
           </div>
-        </div>
+          </div>
+        </section>
 
-        {/* Chunking Pipeline */}
-        <div className="mt-10">
-          <h2 className="mb-6 text-lg font-semibold text-zinc-700 dark:text-zinc-300">
-            Text Chunking Pipeline
-          </h2>
+        {/* Section 2: Text Chunking Pipeline */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-white">
+              2
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Text Chunking Pipeline
+            </h2>
+          </div>
+          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
           
           <div className="flex flex-wrap items-center justify-center gap-3">
             {/* PDF Input */}
@@ -124,7 +144,8 @@ export default function Architecture() {
 
           {/* Chunking Details */}
           <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950">
-            <h3 className="mb-3 font-semibold text-green-700 dark:text-green-300">
+            <h3 className="mb-3 flex items-center gap-2 font-semibold text-green-700 dark:text-green-300">
+              <span className="text-lg">⚙️</span>
               LangChain RecursiveCharacterTextSplitter
             </h3>
             <div className="grid gap-4 md:grid-cols-2">
@@ -149,7 +170,8 @@ export default function Architecture() {
 
           {/* Overlap Visualization */}
           <div className="mt-4 rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-950">
-            <h3 className="mb-3 font-semibold text-purple-700 dark:text-purple-300">
+            <h3 className="mb-3 flex items-center gap-2 font-semibold text-purple-700 dark:text-purple-300">
+              <span className="text-lg">📊</span>
               Overlap Visualization
             </h3>
             <div className="space-y-2">
@@ -170,15 +192,26 @@ export default function Architecture() {
               Overlap ensures context is preserved across chunk boundaries for better retrieval.
             </p>
           </div>
-        </div>
+          </div>
+        </section>
 
-        {/* Component Details */}
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {/* Frontend Details */}
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950">
-            <h3 className="mb-3 font-semibold text-blue-700 dark:text-blue-300">
-              Frontend (Next.js)
-            </h3>
+        {/* Section 3: Component Details */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500 text-sm font-bold text-white">
+              3
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Component Architecture
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Frontend Details */}
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-5 dark:border-blue-800 dark:bg-blue-950">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-blue-700 dark:text-blue-300">
+                <span>🖥️</span>
+                Frontend (Next.js)
+              </h3>
             <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
               <li className="flex items-start gap-2">
                 <span className="text-blue-500">●</span>
@@ -197,13 +230,14 @@ export default function Architecture() {
                 <span>Display chunk cards with metadata</span>
               </li>
             </ul>
-          </div>
+            </div>
 
-          {/* Backend Details */}
-          <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 dark:border-orange-800 dark:bg-orange-950">
-            <h3 className="mb-3 font-semibold text-orange-700 dark:text-orange-300">
-              Backend (FastAPI)
-            </h3>
+            {/* Backend Details */}
+            <div className="rounded-lg border border-orange-200 bg-orange-50 p-5 dark:border-orange-800 dark:bg-orange-950">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-orange-700 dark:text-orange-300">
+                <span>⚡</span>
+                Backend (FastAPI)
+              </h3>
             <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
               <li className="flex items-start gap-2">
                 <span className="text-orange-500">●</span>
@@ -222,15 +256,22 @@ export default function Architecture() {
                 <span>Return chunks array in response</span>
               </li>
             </ul>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Data Flow Steps */}
-        <div className="mt-8">
-          <h3 className="mb-4 font-semibold text-zinc-700 dark:text-zinc-300">
-            Data Flow Steps
-          </h3>
-          <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+        {/* Section 4: Data Flow Steps */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
+              4
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Data Flow Steps
+            </h2>
+          </div>
+          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
             {[
               "1. Select PDF",
               "2. Upload",
@@ -249,16 +290,18 @@ export default function Architecture() {
                 )}
               </div>
             ))}
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* Back Link */}
-        <div className="mt-8 text-center">
+        <div className="mt-4 text-center">
           <a
             href="/"
-            className="text-blue-600 hover:underline dark:text-blue-400"
+            className="inline-flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-zinc-700 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
           >
-            ← Back to Upload
+            <span>←</span>
+            Back to Upload
           </a>
         </div>
       </div>

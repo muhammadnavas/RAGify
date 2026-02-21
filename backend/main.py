@@ -33,17 +33,7 @@ text_splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", ". ", "! ", "? ", ", ", " ", ""]
 )
 
-
 def chunk_text(text: str) -> List[dict]:
-    """
-    Split text into overlapping chunks using LangChain's RecursiveCharacterTextSplitter.
-    
-    Args:
-        text: The text to split
-    
-    Returns:
-        List of chunk dictionaries with id, text, and metadata
-    """
     if not text or not text.strip():
         return []
     
@@ -57,7 +47,6 @@ def chunk_text(text: str) -> List[dict]:
             "text": doc.page_content,
             "length": len(doc.page_content)
         })
-    
     return chunks
 
 
