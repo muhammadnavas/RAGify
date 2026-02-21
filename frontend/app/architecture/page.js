@@ -195,7 +195,72 @@ export default function Architecture() {
           </div>
         </section>
 
-        {/* Section 3: Component Details */}
+        {/* Section 3: Query & Retrieval Pipeline */}
+        <section className="mb-10">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white">
+              Q
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Query & Retrieval Pipeline
+            </h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-center gap-4">
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-sky-300 bg-sky-50 dark:bg-sky-950">
+                <span className="text-2xl">❓</span>
+                <span className="text-xs font-medium text-sky-700 dark:text-sky-300">User Query</span>
+              </div>
+
+              <span className="text-2xl text-zinc-400">→</span>
+
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-indigo-300 bg-indigo-50 dark:bg-indigo-950">
+                <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300">Embed Model</span>
+                <span className="text-xs text-indigo-600 dark:text-indigo-400">(OpenAI / HF)</span>
+              </div>
+
+              <span className="text-2xl text-zinc-400">→</span>
+
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-emerald-300 bg-emerald-50 dark:bg-emerald-950">
+                <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300">Vector DB</span>
+                <span className="text-xs text-emerald-600 dark:text-emerald-400">(Chroma / FAISS)</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-4">
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-amber-300 bg-amber-50 dark:bg-amber-950">
+                <span className="text-xs font-bold text-amber-700 dark:text-amber-300">Similarity Search</span>
+                <span className="text-xs text-amber-600 dark:text-amber-400">Top-K retrieval</span>
+              </div>
+
+              <span className="text-2xl text-zinc-400">→</span>
+
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-fuchsia-300 bg-fuchsia-50 dark:bg-fuchsia-950">
+                <span className="text-xs font-bold text-fuchsia-700 dark:text-fuchsia-300">Context Builder</span>
+                <span className="text-xs text-fuchsia-600 dark:text-fuchsia-400">Assemble top chunks</span>
+              </div>
+
+              <span className="text-2xl text-zinc-400">→</span>
+
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-rose-300 bg-rose-50 dark:bg-rose-950">
+                <span className="text-xs font-bold text-rose-700 dark:text-rose-300">LLM</span>
+                <span className="text-xs text-rose-600 dark:text-rose-400">(Generate answer)</span>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+              <strong className="block mb-2">Notes</strong>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Embed the user query using the same embedding model used for chunks.</li>
+                <li>Perform vector similarity search (cosine / dot) to retrieve top-K relevant chunks.</li>
+                <li>Concatenate retrieved chunks into prompt context (respect token limits) and send to LLM.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4: Component Details */}
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500 text-sm font-bold text-white">
