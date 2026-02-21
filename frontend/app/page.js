@@ -405,12 +405,12 @@ export default function Home() {
                     Top K Results:
                   </label>
                   <input
-                    type="range"
+                    type="number"
                     min="1"
-                    max="10"
+                    max="50"
                     value={topK}
-                    onChange={(e) => setTopK(parseInt(e.target.value))}
-                    className="flex-1"
+                    onChange={(e) => setTopK(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))}
+                    className="w-20 rounded border border-zinc-300 bg-zinc-50 p-2 text-sm text-zinc-900 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
                   />
                   <span className="w-8 text-center text-sm font-medium text-zinc-900 dark:text-white">
                     {topK}

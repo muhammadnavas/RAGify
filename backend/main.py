@@ -100,10 +100,10 @@ def generate_with_gemini(prompt: str, model: str = None, api_key: str = None) ->
     trying a list of SDK model names first. If the SDK is not available or an SDK call fails,
     fall back to REST v1 endpoints for model-specific and generic generation.
     """
-    api_key = api_key or GEMINI_API_KEY
-    preferred = model or GEMINI_MODEL
+    api_key = api_key 
+    preferred = model
     if not api_key:
-        raise RuntimeError("GEMINI_API_KEY (or GOOGLE_API_KEY) not set")
+        raise RuntimeError("GEMINI_API_KEY not set")
 
     # Prepare SDK model candidates (SDK uses names like 'gemini-2.5-flash')
     sdk_candidates = []
@@ -214,7 +214,7 @@ def read_root():
 async def upload_pdf(file: UploadFile = File(...)):
     try:
         # Save the uploaded file
-        file_path = os.path.join(UPLOAD_DIR, file.filename)
+        file_path = os.path.join(UPLOAD_DIR, file.filename) # type: ignore
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
@@ -247,7 +247,7 @@ async def store_embeddings(file: UploadFile = File(...)):
     
     try:
         # Save the uploaded file
-        file_path = os.path.join(UPLOAD_DIR, file.filename)
+        file_path = os.path.join(UPLOAD_DIR, file.filename) # type: ignore
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
@@ -374,8 +374,6 @@ async def answer(request: SearchRequest):
 
         user_prompt = f"Context:\n\n{chr(10).join(context_parts)}\n\nQuestion: {request.query}\n\nAnswer concisely and cite sources."
 
-
-        # Generate using Gemini (Flash 2.5)
         answer_text = generate_with_gemini(user_prompt, model=GEMINI_MODEL)
 
         return JSONResponse(content={"answer": answer_text, "matches": matches}, status_code=200)

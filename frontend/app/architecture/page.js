@@ -268,7 +268,7 @@ export default function Architecture() {
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500 text-sm font-bold text-white">
-              3
+              4
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
               Component Architecture
@@ -329,11 +329,11 @@ export default function Architecture() {
           </div>
         </section>
 
-        {/* Section 4: Embeddings & Vector Store */}
+        {/* Section 5: Embeddings & Vector Store */}
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
-              4
+              5
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
               Embeddings & Vector Store
@@ -413,7 +413,7 @@ export default function Architecture() {
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-500 text-sm font-bold text-white">
-              5
+              6
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
               Semantic Search (Retrieval)
@@ -487,7 +487,7 @@ export default function Architecture() {
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white">
-              6
+              7
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
               API Endpoints
@@ -541,7 +541,7 @@ export default function Architecture() {
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500 text-sm font-bold text-white">
-              7
+              8
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
               Complete RAG Pipeline
