@@ -141,6 +141,45 @@ export default function Home() {
     }
   };
 
+  // LLM Q&A
+  const [llmQuery, setLlmQuery] = useState("");
+  const [llmLoading, setLlmLoading] = useState(false);
+  const [llmAnswer, setLlmAnswer] = useState(null);
+  const [llmMatches, setLlmMatches] = useState(null);
+
+  const handleAskLLM = async () => {
+    if (!llmQuery.trim()) {
+      setError("Please enter a question for the LLM");
+      return;
+    }
+
+    setLlmLoading(true);
+    setError(null);
+    setLlmAnswer(null);
+    setLlmMatches(null);
+
+    try {
+      const resp = await fetch("http://localhost:8000/answer/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: llmQuery, top_k: topK }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.detail || resp.statusText);
+      }
+
+      const data = await resp.json();
+      setLlmAnswer(data.answer);
+      setLlmMatches(data.matches || []);
+    } catch (err) {
+      setError(err.message || "LLM request failed");
+    } finally {
+      setLlmLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-zinc-50 p-8 font-sans dark:bg-black">
       <div className="w-full max-w-5xl">
@@ -385,6 +424,54 @@ export default function Home() {
                 >
                   {searching ? "Searching..." : "Search Documents"}
                 </button>
+
+                {/* LLM Q&A */}
+                <div className="mt-6 rounded-lg border border-indigo-100 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-950">
+                  <h3 className="mb-3 text-lg font-semibold text-zinc-900 dark:text-white">Ask the LLM (Retrieval + Generation)</h3>
+                  <textarea
+                    value={llmQuery}
+                    onChange={(e) => setLlmQuery(e.target.value)}
+                    placeholder="Ask a question about indexed documents..."
+                    className="w-full mb-3 rounded-lg border border-zinc-300 bg-white p-3 text-sm text-zinc-900 focus:border-indigo-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                    rows={3}
+                  />
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleAskLLM}
+                      disabled={llmLoading || !llmQuery.trim()}
+                      className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
+                    >
+                      {llmLoading ? "Thinking..." : "Ask LLM"}
+                    </button>
+                    <button
+                      onClick={() => { setLlmQuery(""); setLlmAnswer(null); setLlmMatches(null); }}
+                      className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:border-zinc-700"
+                    >
+                      Clear
+                    </button>
+                  </div>
+
+                  {llmAnswer && (
+                    <div className="mt-4 rounded-md bg-white p-4 shadow dark:bg-zinc-800">
+                      <h4 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-white">Answer</h4>
+                      <div className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-300">{llmAnswer}</div>
+                    </div>
+                  )}
+
+                  {llmMatches && llmMatches.length > 0 && (
+                    <div className="mt-3">
+                      <h5 className="mb-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">Top Matches</h5>
+                      <div className="space-y-2">
+                        {llmMatches.map((m, i) => (
+                          <div key={i} className="rounded border border-zinc-200 bg-zinc-50 p-2 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                            <div className="text-xs text-zinc-500">Score: {Number(m.score).toFixed(3)}</div>
+                            <div className="text-sm text-zinc-700 dark:text-zinc-300">{m.text}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {searchResults && (
                   <div className="mt-6">
