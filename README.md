@@ -1,51 +1,22 @@
-# RAGify Project
+# RAGify
 
-This project is a full-stack application with the following structure
+RAGify is a small full-stack Retrieval-Augmented Generation (RAG) prototype. It provides a web UI for uploading PDFs, builds a FAISS vector index from document chunks in the backend, retrieves relevant passages at query time, and generates contextual answers.
 
-- **backend/**: Contains the FastAPI backend for handling API requests.
-  - `main.py`: Entry point for the FastAPI application.
-  - `requirements.txt`: Python dependencies for the backend.
+Key components
+- **backend/** — FastAPI service that ingests PDFs, creates/loads a FAISS index, exposes retrieval and generation endpoints, and stores uploaded files under `backend/uploaded_pdfs`.
+- **frontend/** — Next.js application that provides the user interface for uploads, querying, and visualization.
 
-- **frontend/**: Contains the Next.js frontend for the user interface.
-  - `package.json`: Configuration file for the Next.js project.
-  - `pages/index.js`: Main page of the frontend.
+Architecture summary
+- Documents are split into chunks and embedded; embeddings are stored in `backend/faiss_index/index.faiss`.
+- The backend exposes REST endpoints for upload, search, and answer generation; the frontend calls these endpoints to power the UX.
 
-## Setup Instructions
+Quick start (high level)
+- Prepare the backend: create a Python virtual environment, install the dependencies listed in `backend/requirements.txt`, and run the FastAPI app from `backend/main.py` so the API is available.
+- Prepare the frontend: install the Node dependencies in `frontend/` and run the Next.js development server to open the web UI.
+- Use the web UI to upload PDFs; the backend will build/update the FAISS index and make documents searchable.
 
-### Backend
-1. Navigate to the `backend` directory:
-   ```bash
-   cd backend
-   ```
-2. Create a virtual environment:
-   ```bash
-   python -m venv env
-   source env/bin/activate   # On Windows: .\env\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run the FastAPI server:
-   ```bash
-   uvicorn main:app --reload
-   ```
-5. The backend will be available at `http://127.0.0.1:8000`.
+Notes
+- The FAISS index and uploaded PDFs are persisted under `backend/faiss_index/` and `backend/uploaded_pdfs/` respectively.
+- Adjust Python and Node versions as needed; ensure you have a compatible Python interpreter and Node.js installed.
 
-### Frontend
-1. Navigate to the `frontend` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-4. The frontend will be available at `http://localhost:3000`.
-
-### Project Overview
-This project allows users to upload a PDF, split and embed its content, retrieve relevant chunks, generate accurate answers, and visualize the process. The backend is built with FastAPI, and the frontend is built with Next.js.
+If you'd like, I can add explicit install/run commands, API documentation for the backend endpoints, or a local development checklist.
