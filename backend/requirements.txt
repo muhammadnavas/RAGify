@@ -10,3 +10,4 @@ langchain-community
 numpy<2.0
 faiss-cpu
 sentence-transformers
+requests

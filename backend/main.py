@@ -4,14 +4,26 @@ import os
 from fastapi.responses import JSONResponse
 import shutil
 import pdfplumber
+# Load .env for local development if python-dotenv is available
+try:
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+except Exception:
+    pass
 from typing import List, Optional
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from pydantic import BaseModel
-import openai
 import numpy as np
+import requests
+# Optional official Google Generative AI SDK
+try:
+    from google import genai
+    HAS_GENAI = True
+except Exception:
+    HAS_GENAI = False
 
 app = FastAPI()
 
@@ -66,10 +78,111 @@ def load_vectorstore():
 # Try loading existing index on startup
 load_vectorstore()
 
-# Initialize OpenAI if key provided
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if OPENAI_API_KEY:
-    openai.api_key = OPENAI_API_KEY
+# OpenAI removed — backend will use Gemini only
+
+# Gemini / Google Generative API settings (optional)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "models/flash-2.5")
+# Force using Gemini by default (only Gemini provider will be used)
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini").lower()
+
+# If the official SDK is installed and we have a key, initialize a client
+genai_client = None
+if HAS_GENAI and GEMINI_API_KEY:
+    try:
+        genai_client = genai.Client(api_key=GEMINI_API_KEY)
+    except Exception:
+        genai_client = None
+
+
+def generate_with_gemini(prompt: str, model: str = None, api_key: str = None) -> str:
+    """Generate text using Gemini. Prefer the official `google-genai` SDK (if available),
+    trying a list of SDK model names first. If the SDK is not available or an SDK call fails,
+    fall back to REST v1 endpoints for model-specific and generic generation.
+    """
+    api_key = api_key or GEMINI_API_KEY
+    preferred = model or GEMINI_MODEL
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY (or GOOGLE_API_KEY) not set")
+
+    # Prepare SDK model candidates (SDK uses names like 'gemini-2.5-flash')
+    sdk_candidates = []
+    # If preferred looks like 'models/xxx', try to convert to SDK-style name
+    if preferred and preferred.startswith("models/"):
+        name = preferred.split("/", 1)[1]
+        # Common mapping heuristics
+        sdk_candidates.append(name.replace("-", "-"))
+    # Add known/commonly-available SDK model names
+    sdk_candidates.extend([
+        "gemini-2.5-flash",
+        "gemini-2.5-pro",
+        "gemini-2.5",
+        "gemini-1.0",
+        "chat-bison-001",
+        "text-bison-001",
+    ])
+
+    last_err = None
+
+    # Try using official SDK if available
+    if genai_client is not None:
+        for sdk_model in [m for m in sdk_candidates if m]:
+            try:
+                # `generate_content` expects model and contents (string or list)
+                resp = genai_client.models.generate_content(model=sdk_model, contents=prompt)
+                # SDK response often has `.text` attribute
+                return getattr(resp, "text", str(resp))
+            except Exception as e:
+                last_err = f"SDK model={sdk_model} error={str(e)}"
+                # try next sdk model
+                continue
+
+    # Fallback: try REST v1 endpoints for model-specific and generic generation
+    rest_model_candidates = [preferred, "models/text-bison-001", "models/chat-bison-001", "models/flash-2.5"]
+    for m in [x for x in rest_model_candidates if x]:
+        endpoints = [
+            f"https://generativelanguage.googleapis.com/v1/{m}:generate?key={api_key}",
+            f"https://generativelanguage.googleapis.com/v1/models:generate?key={api_key}",
+        ]
+        for url in endpoints:
+            try:
+                if "/models:generate" in url:
+                    body = {"model": m, "prompt": {"text": prompt}, "temperature": 0.0, "maxOutputTokens": 512}
+                else:
+                    body = {"prompt": {"text": prompt}, "temperature": 0.0, "maxOutputTokens": 512}
+
+                resp = requests.post(url, json=body, timeout=30)
+                resp.raise_for_status()
+                data = resp.json()
+
+                if isinstance(data.get("candidates"), list) and len(data["candidates"]) > 0:
+                    cand = data["candidates"][0]
+                    return cand.get("content") or cand.get("output") or cand.get("text") or str(cand)
+                if "output" in data:
+                    return data["output"]
+                if "results" in data and isinstance(data["results"], list) and len(data["results"]) > 0:
+                    r = data["results"][0]
+                    return r.get("content") or r.get("output") or str(r)
+
+                return str(data)
+
+            except requests.HTTPError as e:
+                resp = e.response
+                status = resp.status_code if resp is not None else None
+                body = resp.text if resp is not None else str(e)
+                last_err = f"model={m} url={url} status={status} body={body}"
+                if status == 404:
+                    continue
+                raise HTTPException(status_code=502, detail=f"Gemini API HTTP error: {last_err}")
+            except Exception as e:
+                last_err = str(e)
+                continue
+
+    detail = last_err if last_err is not None else "unknown error"
+    raise HTTPException(status_code=502, detail=(
+        "Gemini API unreachable; attempted SDK and REST models/endpoints failed. "
+        f"Last error: {detail}. Ensure your API key has access to the requested model and that the model name is correct."
+    ))
 
 # Request models
 class SearchRequest(BaseModel):
@@ -229,7 +342,7 @@ async def get_index_stats():
 
 @app.post("/answer/")
 async def answer(request: SearchRequest):
-    """Retrieve top-k chunks from FAISS and generate an answer using OpenAI ChatCompletion."""
+    """Retrieve top-k chunks from FAISS and generate an answer using Gemini (Google Generative)."""
     global vectorstore
 
     if vectorstore is None:
@@ -238,8 +351,9 @@ async def answer(request: SearchRequest):
             detail="No documents indexed yet. Upload a PDF and store embeddings using /store-embeddings/"
         )
 
-    if not OPENAI_API_KEY:
-        raise HTTPException(status_code=400, detail="OPENAI_API_KEY not set on server")
+    # Only Gemini is supported in this deployment
+    if not GEMINI_API_KEY:
+        raise HTTPException(status_code=400, detail="GEMINI_API_KEY (or GOOGLE_API_KEY) not set on server")
 
     try:
         results = vectorstore.similarity_search_with_score(request.query, k=request.top_k)
@@ -260,17 +374,9 @@ async def answer(request: SearchRequest):
 
         user_prompt = f"Context:\n\n{chr(10).join(context_parts)}\n\nQuestion: {request.query}\n\nAnswer concisely and cite sources."
 
-        chat_resp = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            max_tokens=512,
-            temperature=0.0,
-        )
 
-        answer_text = chat_resp["choices"][0]["message"]["content"].strip()
+        # Generate using Gemini (Flash 2.5)
+        answer_text = generate_with_gemini(user_prompt, model=GEMINI_MODEL)
 
         return JSONResponse(content={"answer": answer_text, "matches": matches}, status_code=200)
 
