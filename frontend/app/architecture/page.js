@@ -260,32 +260,257 @@ export default function Architecture() {
           </div>
         </section>
 
-        {/* Section 4: Data Flow Steps */}
+        {/* Section 4: Embeddings & Vector Store */}
         <section className="mb-12">
           <div className="mb-6 flex items-center gap-3">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
               4
             </span>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
-              Data Flow Steps
+              Embeddings & Vector Store
             </h2>
           </div>
           <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
-            <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {/* Chunks */}
+              <div className="flex h-20 w-24 flex-col items-center justify-center rounded-lg border-2 border-purple-400 bg-purple-50 dark:bg-purple-950">
+                <div className="flex gap-0.5">
+                  <span className="text-sm">📦</span>
+                  <span className="text-sm">📦</span>
+                  <span className="text-sm">📦</span>
+                </div>
+                <span className="text-xs font-medium text-purple-700 dark:text-purple-300">Chunks</span>
+              </div>
+              
+              <span className="text-xl text-zinc-400">→</span>
+              
+              {/* HuggingFace Embeddings */}
+              <div className="flex h-20 w-36 flex-col items-center justify-center rounded-lg border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950">
+                <span className="text-2xl">🤗</span>
+                <span className="text-xs font-bold text-yellow-700 dark:text-yellow-300">HuggingFace</span>
+                <span className="text-xs text-yellow-600 dark:text-yellow-400">all-MiniLM-L6-v2</span>
+              </div>
+              
+              <span className="text-xl text-zinc-400">→</span>
+              
+              {/* Vectors */}
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-cyan-400 bg-cyan-50 dark:bg-cyan-950">
+                <span className="text-2xl">🔢</span>
+                <span className="text-xs font-medium text-cyan-700 dark:text-cyan-300">Vectors</span>
+                <span className="text-xs text-cyan-600 dark:text-cyan-400">384 dimensions</span>
+              </div>
+              
+              <span className="text-xl text-zinc-400">→</span>
+              
+              {/* FAISS */}
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-blue-400 bg-blue-50 dark:bg-blue-950">
+                <span className="text-2xl">🗄️</span>
+                <span className="text-xs font-bold text-blue-700 dark:text-blue-300">FAISS</span>
+                <span className="text-xs text-blue-600 dark:text-blue-400">Vector Store</span>
+              </div>
+            </div>
+
+            {/* Embedding Details */}
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950">
+                <h3 className="mb-3 flex items-center gap-2 font-semibold text-yellow-700 dark:text-yellow-300">
+                  <span className="text-lg">🤗</span>
+                  Sentence Transformers
+                </h3>
+                <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <li>• Model: <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">all-MiniLM-L6-v2</code></li>
+                  <li>• Output: 384-dimensional dense vectors</li>
+                  <li>• Optimized for semantic similarity</li>
+                  <li>• Fast inference on CPU</li>
+                </ul>
+              </div>
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950">
+                <h3 className="mb-3 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300">
+                  <span className="text-lg">🗄️</span>
+                  FAISS Index
+                </h3>
+                <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  <li>• Facebook AI Similarity Search</li>
+                  <li>• Efficient nearest neighbor search</li>
+                  <li>• Persisted to <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">faiss_index/</code></li>
+                  <li>• Supports incremental updates</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 5: Semantic Search Flow */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-500 text-sm font-bold text-white">
+              5
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Semantic Search (Retrieval)
+            </h2>
+          </div>
+          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {/* Query */}
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-pink-400 bg-pink-50 dark:bg-pink-950">
+                <span className="text-2xl">❓</span>
+                <span className="text-xs font-medium text-pink-700 dark:text-pink-300">User Query</span>
+              </div>
+              
+              <span className="text-xl text-zinc-400">→</span>
+              
+              {/* Embed Query */}
+              <div className="flex h-20 w-32 flex-col items-center justify-center rounded-lg border-2 border-yellow-400 bg-yellow-50 dark:bg-yellow-950">
+                <span className="text-2xl">🤗</span>
+                <span className="text-xs font-bold text-yellow-700 dark:text-yellow-300">Embed Query</span>
+              </div>
+              
+              <span className="text-xl text-zinc-400">→</span>
+              
+              {/* FAISS Search */}
+              <div className="flex h-20 w-32 flex-col items-center justify-center rounded-lg border-2 border-blue-400 bg-blue-50 dark:bg-blue-950">
+                <span className="text-2xl">🔍</span>
+                <span className="text-xs font-bold text-blue-700 dark:text-blue-300">FAISS Search</span>
+                <span className="text-xs text-blue-600 dark:text-blue-400">k-NN lookup</span>
+              </div>
+              
+              <span className="text-xl text-zinc-400">→</span>
+              
+              {/* Results */}
+              <div className="flex h-20 w-28 flex-col items-center justify-center rounded-lg border-2 border-green-400 bg-green-50 dark:bg-green-950">
+                <span className="text-2xl">📋</span>
+                <span className="text-xs font-medium text-green-700 dark:text-green-300">Top-K Results</span>
+              </div>
+            </div>
+
+            {/* Search Details */}
+            <div className="mt-6 rounded-lg border border-pink-200 bg-pink-50 p-4 dark:border-pink-800 dark:bg-pink-950">
+              <h3 className="mb-3 flex items-center gap-2 font-semibold text-pink-700 dark:text-pink-300">
+                <span className="text-lg">🔍</span>
+                Similarity Search Process
+              </h3>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">1. Query Embedding</h4>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                    Convert user query to 384D vector using same embedding model
+                  </p>
+                </div>
+                <div>
+                  <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">2. Vector Search</h4>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                    FAISS finds nearest neighbors using L2 distance metric
+                  </p>
+                </div>
+                <div>
+                  <h4 className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">3. Return Results</h4>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                    Return top-K chunks with similarity scores and metadata
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 6: API Endpoints */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white">
+              6
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              API Endpoints
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {/* Endpoint 1 */}
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
+              <div className="flex items-center gap-3">
+                <span className="rounded bg-green-100 px-2 py-1 text-xs font-bold text-green-700 dark:bg-green-900 dark:text-green-300">POST</span>
+                <code className="text-sm font-medium text-zinc-800 dark:text-zinc-200">/upload-pdf/</code>
+              </div>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Upload PDF, extract text, split into chunks. Returns preview without storing.
+              </p>
+            </div>
+            {/* Endpoint 2 */}
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
+              <div className="flex items-center gap-3">
+                <span className="rounded bg-green-100 px-2 py-1 text-xs font-bold text-green-700 dark:bg-green-900 dark:text-green-300">POST</span>
+                <code className="text-sm font-medium text-zinc-800 dark:text-zinc-200">/store-embeddings/</code>
+              </div>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Upload PDF, generate embeddings, store in FAISS vector index.
+              </p>
+            </div>
+            {/* Endpoint 3 */}
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
+              <div className="flex items-center gap-3">
+                <span className="rounded bg-green-100 px-2 py-1 text-xs font-bold text-green-700 dark:bg-green-900 dark:text-green-300">POST</span>
+                <code className="text-sm font-medium text-zinc-800 dark:text-zinc-200">/search/</code>
+              </div>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Semantic search. Body: <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">{"{ query, top_k }"}</code>. Returns similar chunks with scores.
+              </p>
+            </div>
+            {/* Endpoint 4 */}
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
+              <div className="flex items-center gap-3">
+                <span className="rounded bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">GET</span>
+                <code className="text-sm font-medium text-zinc-800 dark:text-zinc-200">/index-stats/</code>
+              </div>
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                Get FAISS index statistics: total vectors, embedding model, dimensions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 7: Data Flow Steps */}
+        <section className="mb-12">
+          <div className="mb-6 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500 text-sm font-bold text-white">
+              7
+            </span>
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+              Complete RAG Pipeline
+            </h2>
+          </div>
+          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-800/50">
+            <h3 className="mb-4 text-sm font-medium text-zinc-700 dark:text-zinc-300">Indexing Phase</h3>
+            <div className="mb-6 flex flex-wrap items-center justify-center gap-2 text-sm">
             {[
-              "1. Select PDF",
-              "2. Upload",
-              "3. Save File",
-              "4. Extract Text",
-              "5. Chunk Text",
-              "6. Return JSON",
-              "7. Display",
+              "📄 PDF",
+              "📝 Extract",
+              "✂️ Chunk",
+              "🤗 Embed",
+              "🗄️ Store",
             ].map((step, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="rounded-full bg-zinc-200 px-3 py-1 dark:bg-zinc-700 dark:text-zinc-300">
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                   {step}
                 </span>
-                {i < 6 && (
+                {i < 4 && (
+                  <span className="text-zinc-400 dark:text-zinc-600">→</span>
+                )}
+              </div>
+            ))}
+            </div>
+            <h3 className="mb-4 text-sm font-medium text-zinc-700 dark:text-zinc-300">Query Phase</h3>
+            <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+            {[
+              "❓ Query",
+              "🤗 Embed",
+              "🔍 Search",
+              "📋 Results",
+            ].map((step, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                  {step}
+                </span>
+                {i < 3 && (
                   <span className="text-zinc-400 dark:text-zinc-600">→</span>
                 )}
               </div>
