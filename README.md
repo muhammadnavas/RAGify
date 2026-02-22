@@ -411,7 +411,7 @@ RAGify/
 │   ├── postcss.config.mjs             # PostCSS configuration
 │   ├── eslint.config.mjs              # ESLint rules
 │   └── tailwind.config.js             # Tailwind CSS config
-└── pages/                              # Additional pages (if used)
+└── pages/                              # Additional pages
 ```
 
 ---
